@@ -18,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -90,7 +91,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		
 		 String token = Jwts.builder()
 		.setSubject(userDetailsByUsername.get().getId())
-		.setExpiration(new Date(System.currentTimeMillis() + Long.parseLong("60000")))
+		.setExpiration(new Date(System.currentTimeMillis() + Long.parseLong("600000000000")))
 		.signWith(SignatureAlgorithm.HS512, env.getProperty("token.value") )
 		.compact(); 
 		 
@@ -103,6 +104,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		System.out.println("Successful Authentication");
 		System.out.println("**********************************************");
 		System.out.println("Generated JWT = " + token);
+	
 		
 		//super.successfulAuthentication(request, response, chain, authResult);
 	}

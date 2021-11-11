@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.server.ServerWebExchange;
@@ -32,32 +33,35 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
 		if ((request.getHeader(HttpHeaders.AUTHORIZATION)) != null) {
 
 			UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-
+			
 			try {
 				chain.doFilter(request, response);
 			} catch (IOException | ServletException e) {
-				System.out.println("####################################################");
+				System.out.println("8888888888888888888888888888888888888888");
 				System.out.println("Authorzation FAILED");
-				System.out.println("######################################################");
+				System.out.println("88888888888888888888888888888888888888888888");
+				
 				e.printStackTrace();
 			}
 		}
 
 		try {
 			chain.doFilter(request, response);
-		} catch (IOException | ServletException e) {
-			System.out.println("####################################################");
+		} catch (Exception e) {
+			System.out.println("999999999999999999999999999999999999999999999999999999");
 			System.out.println("Authorzation FAILED");
-			System.out.println("######################################################");
+			System.out.println("999999999999999999999999999999999999999999999999999999");
 			e.printStackTrace();
 		}
+		
+		chain.doFilter(request, response);
 
 	}
 

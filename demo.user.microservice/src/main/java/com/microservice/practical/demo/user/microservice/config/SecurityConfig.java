@@ -1,5 +1,7 @@
 package com.microservice.practical.demo.user.microservice.config;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +13,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.microservice.practical.demo.user.microservice.service.UserService;
@@ -69,7 +72,9 @@ private AuthorizationFilter getAuthorizationFilter() throws Exception {
 	
 }
 
-
-
+@PostConstruct
+public void enableAuthenticationContextOnSpawnedThreads() {
+	SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+}
 
 }
