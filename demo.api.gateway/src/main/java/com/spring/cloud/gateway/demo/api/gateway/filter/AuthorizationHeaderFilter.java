@@ -121,7 +121,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
 		 String token = Jwts.builder()
 		 .setSubject(subject)
-		 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong("60000")))
+		 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong("600000000000")))
 		 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.value"))
 		 .compact(); 
 		 
