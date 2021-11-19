@@ -1,7 +1,5 @@
 package com.spring.cloud.gateway.demo.api.gateway.filter;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -16,7 +14,6 @@ import org.springframework.web.server.ServerWebExchange;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import reactor.core.publisher.Mono;
@@ -117,31 +114,24 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 		return false;
 	}
 
-	protected ServerWebExchange refreshJWTToken(String subject, ServerWebExchange exchange) {
-
-		 String token = Jwts.builder()
-		 .setSubject(subject)
-		 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong("600000000000")))
-		 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.value"))
-		 .compact(); 
-		 
-		 
-		//Builder request = exchange.mutate().request(exchange.getRequest().mutate().header("token", token).build());
-		//Builder request2 = exchange.mutate().request(exchange.getRequest().mutate().header("userId", token).build());
-
-		 //HttpHeaders headers = exchange.getRequest().getHeaders();
-		 //String newtokenvalue = headers.get(HttpHeaders.AUTHORIZATION).set(0, token);
-		
-		
-	
-		System.out.println("**********************************************");
-		System.out.println("Refreshed JWT = " + token);
-		System.out.println("*********************************************");	
-		//super.successfulAuthentication(request, response, chain, authResult);
-		
-		isJwtValid(token, exchange);
-		return exchange;
-	}
+//	protected ServerWebExchange refreshJWTToken(String subject, ServerWebExchange exchange) {
+//
+//		 String token = Jwts.builder()
+//		 .setSubject(subject)
+//		 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong("120000")))
+//		 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.value"))
+//		 .compact(); 
+//		 
+//		 
+//			
+//		System.out.println("**********************************************");
+//		System.out.println("Refreshed JWT = " + token);
+//		System.out.println("*********************************************");	
+//		//super.successfulAuthentication(request, response, chain, authResult);
+//		
+//		isJwtValid(token, exchange);
+//		return exchange;
+//	}
 
 	
 }

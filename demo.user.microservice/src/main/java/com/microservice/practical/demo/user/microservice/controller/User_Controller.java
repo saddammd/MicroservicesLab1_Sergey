@@ -1,5 +1,6 @@
 package com.microservice.practical.demo.user.microservice.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.microservice.practical.demo.user.microservice.model.RegisterUser;
 import com.microservice.practical.demo.user.microservice.model.RegisterUserEntity;
+import com.microservice.practical.demo.user.microservice.model.RegisterUserResponse;
 import com.microservice.practical.demo.user.microservice.service.UserService;
 
 @RestController
@@ -26,15 +28,18 @@ public class User_Controller {
 	@Autowired
 	public UserService userService;
 
-	@PostMapping(value = "/register", produces = { MediaType.APPLICATION_JSON_VALUE,
-			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
-					MediaType.APPLICATION_XML_VALUE })
-	public ResponseEntity<RegisterUser> registerUser(@RequestBody RegisterUser register_user) {
-
+	@PostMapping(value = "/register",  produces = { MediaType.APPLICATION_JSON_VALUE,
+			   										MediaType.APPLICATION_XML_VALUE },
+			                          consumes = { MediaType.APPLICATION_JSON_VALUE,
+			                        		  	   MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<RegisterUserResponse> registerUser(@RequestBody RegisterUser register_user)throws IOException {
+		
 		RegisterUserEntity userEntity = new RegisterUserEntity();
 		BeanUtils.copyProperties(register_user, userEntity);
-		userService.Save(userEntity);
-		return new ResponseEntity<RegisterUser>(register_user, HttpStatus.CREATED);
+		RegisterUserEntity save = userService.Save(userEntity);
+		RegisterUserResponse registerUserResponse = new RegisterUserResponse();
+		BeanUtils.copyProperties(save, registerUserResponse);
+		return ResponseEntity.status(HttpStatus.OK).body(registerUserResponse);
 	}
 
 	@GetMapping(value = "/users", produces = { MediaType.APPLICATION_JSON_VALUE })

@@ -18,63 +18,64 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.microservice.practical.demo.user.microservice.service.UserService;
 
+import feign.RequestTemplate;
+
 @Configuration
-@EnableWebSecurity(debug=true)
+@EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter implements EnvironmentAware{
-	
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements EnvironmentAware {
+
 	@Autowired
 	private UserService userService;
-	
+
 	private Environment environment;
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		http.authorizeRequests().antMatchers("/**").hasIpAddress("192.168.1.7")
-		.and()
-		.addFilter(getAuthenticationFilter())
-		.addFilter(getAuthorizationFilter());
-		http.headers().frameOptions().disable();
+		http.headers().frameOptions().sameOrigin();
+		http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
+		http.authorizeRequests().antMatchers("/**").hasIpAddress("192.168.1.7").and()
+		.addFilter(getAuthenticationFilter()).addFilter(getAuthorizationFilter());
+		
 		super.configure(http);
 	}
-	
 
 	@Override
 	public void setEnvironment(Environment environment) {
-		
+
 		this.environment = environment;
-		
+
 	}
-	
-@Bean	
-public BCryptPasswordEncoder bCryptPasswordEncoder() {
-return new BCryptPasswordEncoder();
-}
-	
-@Override
-@Bean(name=BeanIds.AUTHENTICATION_MANAGER)
-public AuthenticationManager authenticationManagerBean() throws Exception {
-	return super.authenticationManagerBean();
-}
-	
-private AuthenticationFilter getAuthenticationFilter() throws Exception {
-	AuthenticationFilter filter = new AuthenticationFilter(authenticationManagerBean(), userService,
-			this.environment);
-	filter.setFilterProcessesUrl("/login");
-	return filter;
-}
 
-private AuthorizationFilter getAuthorizationFilter() throws Exception {
-	
-	AuthorizationFilter authenticationFilter = new AuthorizationFilter(authenticationManagerBean());
-	return authenticationFilter;
-	
-}
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-@PostConstruct
-public void enableAuthenticationContextOnSpawnedThreads() {
-	SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
-}
+	@Override
+	@Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
+
+	private AuthenticationFilter getAuthenticationFilter() throws Exception {
+		AuthenticationFilter filter = new AuthenticationFilter(authenticationManagerBean(), userService,
+				this.environment);
+		filter.setFilterProcessesUrl("/login");
+		return filter;
+	}
+
+	private AuthorizationFilter getAuthorizationFilter() throws Exception {
+
+		AuthorizationFilter authenticationFilter = new AuthorizationFilter(authenticationManagerBean());
+		return authenticationFilter;
+
+	}
+
+	@PostConstruct
+	public void enableAuthenticationContextOnSpawnedThreads() {
+		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+	}
 
 }

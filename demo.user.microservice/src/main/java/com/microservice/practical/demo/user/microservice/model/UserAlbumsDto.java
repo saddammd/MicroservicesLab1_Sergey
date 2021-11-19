@@ -2,8 +2,11 @@ package com.microservice.practical.demo.user.microservice.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UserAlbumsDto {
 	
+	@JsonIgnore
 	private List<Albums> albums;
 	
 	

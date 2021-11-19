@@ -1,7 +1,10 @@
 package com.microservice.practical.demo.user.microservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Albums {
 	
+	@JsonIgnore
 	private String albumId;
 	private String userId;
 	private String name;

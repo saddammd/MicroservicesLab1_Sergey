@@ -1,4 +1,4 @@
-package com.microservice.practical.demo.user.microservice;
+package com.microservice.practical.demo.user.microservice.config;
 
 import java.util.List;
 
@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.microservice.practical.demo.user.microservice.model.Albums;
 
-@FeignClient(name="albums-ws")
+@FeignClient(name="albums-ws"
+//,configuration = {FeignConfig.class}
+)
 public interface AlbumsClient {
 	
 	@GetMapping("/users/${id}/albums")
